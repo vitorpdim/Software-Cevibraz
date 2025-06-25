@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="index.html">
+                <img src="img/WhatsApp Image 2023-05-10 at 3.58.46 PM (2).png" alt="Logo" height="40">
+            </a>
+
+            <div class="mx-auto">
+                <a class="nav-link backlog-link text-center" href="backlog/index.html">Registro de pedidos</a>
+            </div>
+
+            <div style="width: 40px;"></div>
+        </div>
+    </nav>
+    <header class="text-center mb-4">
+        <div class="container">
+            <div class="titulo-arredondado">
+                <h1>Orçamento de Quadros</h1>
+            </div>
+        </div>
+    </header>
+    <main class="container">
+        <section class="mb-4">
+
+            <h3>Quadro</h3>
+            <div id="navegacao-quadros-container" class="d-flex justify-content-between align-items-center mb-2 d-none">
+                <button id="btnQuadroAnterior" class="btn btn-secondary">&lt; Anterior</button>
+                <h4 id="contadorQuadros" class="mb-0">Quadro 1 de 1</h4>
+                <button id="btnQuadroProximo" class="btn btn-secondary">Próximo &gt;</button>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label>Largura (cm)</label>
+                    <input type="number" class="form-control interactive-number-input" id="inputLarguraQuadro">
+
+                </div>
+
+                <div class="col-md-6">
+                    <label>Altura (cm)</label>
+                    <input type="number" class="form-control interactive-number-input" id="inputAlturaQuadro">
+                </div>
+            </div>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="chkMedidaCliente">
+                <label class="form-check-label" for="chkMedidaCliente">Medida fornecida pelo cliente</label>
+            </div>
+
+
+            <div>
+                <button class="btn btn-primary me-2" id="btnNovoQuadro">Novo Quadro</button>
+                <button class="btn btn-secondary me-2" id="btnCopiarQuadro">Copiar Quadro</button>
+            </div>
+        </section>
+
+        <section class="mb-4">
+            <br>
+            <h4 class="">Itens:</h4>
+
+            <h3>Moldura</h3>
+
+            <div id="moldura-container">
+                <div class="form-check mb-2 d-flex align-items-center">
+                    <input class="form-check-input me-2" type="checkbox" id="checkbox-inicial">
+                    <input type="text" class="form-control interactive-number-input" list="lista-molduras"
+                        placeholder="Código da moldura" id="input-inicial" disabled>
+                </div>
+
+
+                <button type="button" class="btn btn-sm btn-success mt-2" id="btnAdicionarNovaMoldura">Adicionar Outra
+                    Moldura</button>
+                <datalist id="lista-molduras"></datalist>
+            </div>
+
+            <datalist id="lista-molduras"></datalist>
+            <br>
+
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="chkFundo" value="Fundo">
+                <label class="form-check-label" for="chkFundo">Fundo</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="chkSarrafo" value="Sarrafo">
+                <label class="form-check-label" for="chkSarrafo">Sarrafo</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="chkVidro" value="Vidro Incolor 2mm">
+                <label class="form-check-label" for="chkVidro">Vidro Incolor 2mm</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="chkSegundoVidro" value="Vidro Antirreflexo 2mm">
+                <label class="form-check-label" for="chkSegundoVidro">Vidro Antirreflexo 2mm</label>
+            </div>
+
+
+            <div class="form-check mb-2">
+                <input id="checkbox-paspatur" class="form-check-input" type="checkbox" value="Paspatur">
+                <label class="form-check-label" for="checkbox-paspatur">Paspatur</label>
+            </div>
+
+            <div id="paspatur-opcoes" class="ms-4 d-none d-flex align-items-center gap-2">
+
+                <label for="input-espessura" class="mb-0">Espessura do paspatur (cm)</label>
+
+                <input id="input-espessura" type="number" class="form-control w-auto interactive-number-input"
+                    placeholder="Ex: 2">
+            </div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="chkLimpeza">
+                <label class="form-check-label" for="chkLimpeza">Limpeza do quadro</label>
+            </div>
+
+        </section>
+
+        <section class="mb-4">
+            <h3>Atendente</h3>
+            <div class="mb-3">
+                <label class="form-label" for="inputNomeAtendente">Nome:</label>
+                <input type="text" class="form-control" id="inputNomeAtendente">
+            </div>
+        </section>
+
+        <section class="mb-4">
+
+            <h3>Dados do cliente</h3>
+            <div class="mb-3">
+                <label class="form-label">Nome:</label>
+                <input type="text" class="form-control" id="inputNomeCliente">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Telefone:</label>
+                <input type="text" class="form-control" id="inputTelefoneCliente">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Observações:</label>
+                <textarea class="form-control" rows="3" id="textareaObservacoes"></textarea>
+            </div>
+        </section>
+
+        <section class="final-section mt-4">
+            <div class="mb-3">
+                <button id="btnCalcularPreco" class="btn btn-info me-2">Calcular Preço do Quadro</button>
+                <div id="resultadoCalculo" class="mt-2"></div>
+            </div>
+
+            <hr>
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="chkEditarValorFinal">
+                <label class="form-check-label" for="chkEditarValorFinal">
+                    Editar valor final TOTAL do pedido?
+                </label>
+            </div>
+            <div id="edicaoValorFinalContainer" class="mb-3 d-none">
+                <label for="inputValorFinalEditado" class="form-label">Valor Final Editado (R$):</label>
+                <input type="number" class="form-control w-auto d-inline-block interactive-number-input"
+                    id="inputValorFinalEditado" step="0.01">
+                <button type="button" class="btn btn-sm btn-success ms-2" id="btnSalvarValorEditado">Aplicar
+                    Valor</button>
+            </div>
+
+            <button id="btnFinalizarPedido" class="btn btn-primary btn-lg w-100">Finalizar Pedido (PDF)</button>
+        </section>
+
+        <div class="my-5">
+            <h4>Versão 4.0</h4>
+        </div>
+
+    </main>
+
+    <script src="js/app.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

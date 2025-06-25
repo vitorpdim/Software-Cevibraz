@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento de Quadros - Backlog</title>
+
+    <link rel="stylesheet" href="../../site orçamento/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/backlog.css">
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="../index.html">
+                <img class="imagem" src="img/WhatsApp Image 2023-05-10 at 3.58.46 PM (2).png" alt="Logo" height="40">
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <h1>Backlog de Pedidos</h1>
+
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="a-fazer">A Fazer</button>
+                <button class="tab-button" data-tab="ja-feito">Já Feito</button>
+                <button class="tab-button" data-tab="entregue">Entregue</button>
+            </div>
+
+            <div class="tab-content">
+                <div id="a-fazer" class="tab-pane active">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome do cliente</th>
+                                <th>Número do pedido</th>
+                                <th>PDF do pedido</th>
+                                <th>OS</th>
+                                <th>Avançar Status</th> <th class="action-cell"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidos-a-fazer">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="ja-feito" class="tab-pane">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome do cliente</th>
+                                <th>Número do pedido</th>
+                                <th>PDF do pedido</th>
+                                <th>OS</th>
+                                <th>Avançar Status</th> <th class="action-cell"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidos-ja-feito">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="entregue" class="tab-pane">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome do cliente</th>
+                                <th>Número do pedido</th>
+                                <th>PDF do pedido</th>
+                                <th>OS</th>
+                                <th>Avançar Status</th> <th class="action-cell"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidos-entregue">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="statusChangeModal" class="status-modal">
+        <div class="status-modal-content">
+            <span class="close-button" onclick="closeStatusModal()">&times;</span>
+            <h4>Mudar Status do Pedido <span id="modalPedidoNum"></span></h4>
+            <div id="statusOptionsContainer">
+                </div>
+        </div>
+    </div>
+
+    <script src="../../site orçamento/js/bootstrap.bundle.min.js"></script>
+    <script src="js/backlog.js"></script>
+
+</body>
+</html>

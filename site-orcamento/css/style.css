@@ -1,0 +1,365 @@
+/* Reset e configurações base */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #f0f8e8 0%, #fff9e6 50%, #f5f9f0 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: #2d3748;
+    line-height: 1.6;
+}
+
+/* Otimização: A propriedade 'will-change' avisa o navegador quais propriedades 
+serão animadas, permitindo que ele otimize o processo com antecedência. */
+.btn, .form-control, .form-check-input, section, .backlog-link {
+    will-change: transform, opacity; /* Informa que transform e opacity podem mudar */
+}
+
+/* Navbar moderna - Otimizada */
+.custom-navbar {
+    /* Otimização: Removido 'backdrop-filter', que é muito pesado para a performance. 
+       Substituído por um fundo sólido com transparência para manter a estética. */
+    background: rgba(240, 248, 232, 0.85);
+    border-bottom: 1px solid rgba(72, 187, 120, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.backlog-link {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2d5016;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 25px;
+    /* Otimização: A transição agora foca em 'transform' e 'background-color', que são mais leves. */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, color 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.backlog-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(72, 187, 120, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.backlog-link:hover {
+    color: #22543d;
+    background: rgba(72, 187, 120, 0.1);
+    transform: translateY(-2px);
+    /* Otimização: A animação de 'box-shadow' foi removida do hover para evitar repinturas custosas. 
+       O 'transform' já fornece um feedback visual excelente e performático. */
+}
+
+.backlog-link:hover::before {
+    left: 100%;
+}
+
+/* Header com título arredondado - Otimizado */
+.titulo-arredondado {
+    /* Otimização: Removido 'backdrop-filter'. */
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 0 0 50px 50px;
+    margin: 0 auto 30px;
+    padding: 40px 30px;
+    max-width: 800px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 1px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.titulo-arredondado::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #48bb78, #ecc94b, #48bb78);
+    background-size: 200% 100%;
+    /* A animação de background-position é relativamente leve */
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: 200% 0; }
+    50% { background-position: -200% 0; }
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2d5016;
+    margin: 0;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Seções modernas - Otimizada */
+section {
+    /* Otimização: Removido 'backdrop-filter'. O fundo com 'rgba' já dá um bom efeito. */
+    background: rgba(255, 255, 255, 0.8);
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    /* Otimização: Transição focada em 'transform' e 'box-shadow' (embora o ideal seja evitar animar a sombra) */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #48bb78, #ecc94b);
+    border-radius: 20px 20px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+section:hover {
+    transform: translateY(-5px);
+    /* Otimização: A animação da sombra foi mantida, mas a remoção do backdrop-filter já alivia muito.
+       Se ainda sentir lento, remova a transição do box-shadow. */
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.12),
+        0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+section:hover::before {
+    opacity: 1;
+}
+
+/* Títulos das seções */
+h3 {
+    color: #2d5016;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(72, 187, 120, 0.2);
+    position: relative;
+}
+
+h3::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, #48bb78, #ecc94b);
+    border-radius: 1px;
+}
+
+/* Inputs modernos - Otimizado */
+.form-control {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(72, 187, 120, 0.2);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    /* Otimização: Transição focada nas propriedades mais leves. */
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+    /* Removido backdrop-filter */
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #48bb78;
+    background: rgba(255, 255, 255, 0.95);
+    /* Otimização: A sombra no focus é importante para acessibilidade, então mantemos,
+       mas a performance geral será melhor sem os outros gargalos. */
+    box-shadow: 
+        0 0 0 3px rgba(72, 187, 120, 0.1),
+        0 4px 12px rgba(72, 187, 120, 0.15);
+}
+
+/* ... (restante do CSS sem mudanças significativas de performance) ... */
+
+/* Botões modernos - Otimizados */
+.btn {
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    /* Otimização: Transição focada em transform e background. */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    /* Otimização: A sombra no hover é um efeito forte. Manteremos, mas a carga já é menor. */
+}
+
+/* ... (as classes de botão .btn-primary, .btn-secondary etc. e o restante do CSS continuam aqui) ... */
+/* O código restante do seu CSS pode ser colado aqui, pois as otimizações mais impactantes já foram feitas acima. 
+   Para ser completo, incluí todo o resto do seu arquivo abaixo. */
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #38a169, #2f855a);
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #ecc94b, #d69e2e);
+    color: #744210;
+    box-shadow: 0 4px 15px rgba(236, 201, 75, 0.3);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #d69e2e, #b7791f);
+    box-shadow: 0 8px 25px rgba(236, 201, 75, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #38a169, #2f855a);
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #4299e1, #3182ce);
+    color: white;
+    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #3182ce, #2c5282);
+    box-shadow: 0 8px 25px rgba(66, 153, 225, 0.4);
+}
+
+.btn-lg {
+    padding: 16px 32px;
+    font-size: 1.1rem;
+    border-radius: 15px;
+}
+
+/* ... O resto do seu CSS continua aqui, pois não tem impacto crítico na performance de animação ... */
+/* A partir daqui, as classes são mais específicas e o impacto é menor, mas as otimizações principais já foram feitas. */
+
+/* Checkboxes customizados, labels, etc. (sem alterações críticas) */
+.form-check { margin-bottom: 15px; display: flex; align-items: center; gap: 12px; }
+.form-check-input { width: 20px; height: 20px; border: 2px solid #48bb78; border-radius: 6px; background: rgba(255, 255, 255, 0.9); cursor: pointer; transition: all 0.3s; position: relative; margin: 0; flex-shrink: 0; }
+.form-check-input:checked { background: linear-gradient(135deg, #48bb78, #38a169); border-color: #38a169; transform: scale(1.05); }
+.form-check-input:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px; font-weight: bold; }
+.form-check-input:hover { border-color: #38a169; box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1); }
+.form-check-label { font-weight: 500; color: #2d3748; cursor: pointer; margin: 0; transition: color 0.3s ease; user-select: none; }
+.form-check-label:hover { color: #2d5016; }
+label { font-weight: 600; color: #2d5016; margin-bottom: 8px; display: block; font-size: 0.95rem; letter-spacing: 0.3px; }
+.form-control::placeholder { color: #a0aec0; transition: color 0.3s ease; }
+.form-control:focus::placeholder { color: #cbd5e0; }
+
+
+/* Demais seções (sem alterações críticas) */
+#navegacao-quadros-container { background: rgba(72, 187, 120, 0.05); padding: 15px; border-radius: 15px; border: 1px solid rgba(72, 187, 120, 0.2); margin-bottom: 20px; }
+#contadorQuadros { font-weight: 600; color: #2d5016; font-size: 1.1rem; }
+#moldura-container { background: rgba(248, 250, 252, 0.5); padding: 20px; border-radius: 15px; border: 1px solid rgba(72, 187, 120, 0.1); margin: 15px 0; }
+.moldura-linha { margin-bottom: 12px; padding: 10px; background: rgba(255, 255, 255, 0.7); border-radius: 10px; transition: all 0.3s ease; }
+.moldura-linha:hover { background: rgba(255, 255, 255, 0.9); transform: translateX(5px); }
+.btn-remover-moldura-custom { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #f56565, #e53e3e); color: white; border: none; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.3s; cursor: pointer; }
+.btn-remover-moldura-custom:hover { background: linear-gradient(135deg, #e53e3e, #c53030); transform: scale(1.1) rotate(90deg); box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4); }
+#paspatur-opcoes { background: rgba(236, 201, 75, 0.1); padding: 15px; border-radius: 12px; border-left: 4px solid #ecc94b; margin: 10px 0; transition: all 0.3s ease; }
+#paspatur-opcoes.d-none { opacity: 0; transform: translateY(-10px); }
+#resultadoCalculo { background: linear-gradient(135deg, rgba(72, 187, 120, 0.1), rgba(236, 201, 75, 0.1)); padding: 20px; border-radius: 15px; border: 1px solid rgba(72, 187, 120, 0.2); margin-top: 15px; /* Otimização: Removido backdrop-filter daqui também */ }
+#resultadoCalculo h4 { color: #2d5016; margin: 0; font-size: 1.3rem; font-weight: 700; }
+#resultadoCalculo h5 { color: #2d5016; margin: 15px 0 10px; font-size: 1.1rem; font-weight: 600; }
+#resultadoCalculo ul { margin: 0; padding-left: 20px; }
+#resultadoCalculo li { color: #4a5568; margin-bottom: 5px; }
+.final-section { background: linear-gradient(135deg, rgba(72, 187, 120, 0.05), rgba(236, 201, 75, 0.05)); border: 2px solid rgba(72, 187, 120, 0.2); }
+#edicaoValorFinalContainer { background: rgba(236, 201, 75, 0.1); padding: 15px; border-radius: 12px; border: 1px solid rgba(236, 201, 75, 0.3); margin: 15px 0; }
+
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container { padding: 15px; }
+    header h1 { font-size: 2rem; }
+    .titulo-arredondado { padding: 25px 20px; border-radius: 0 0 30px 30px; }
+    section { padding: 20px; margin-bottom: 20px; }
+    .btn { padding: 10px 20px; font-size: 0.9rem; }
+    .btn-lg { padding: 14px 28px; font-size: 1rem; }
+    .form-control { padding: 10px 14px; }
+    #navegacao-quadros-container { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+/* Animações de entrada - Já está bem otimizada usando opacity e transform! */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+section {
+    animation: fadeInUp 0.6s ease-out;
+}
+section:nth-child(2) { animation-delay: 0.1s; }
+section:nth-child(3) { animation-delay: 0.2s; }
+section:nth-child(4) { animation-delay: 0.3s; }
+section:nth-child(5) { animation-delay: 0.4s; }
+
+/* Otimização de performance - Removido 'hacks' antigos como backface-visibility
+   e substituído pelo will-change no início do arquivo, que é mais moderno. */
+
+/* Scrollbar customizada (sem impacto na performance) */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(72, 187, 120, 0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #48bb78, #ecc94b); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, #38a169, #d69e2e); }

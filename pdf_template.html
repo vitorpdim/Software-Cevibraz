@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento de Quadros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 1cm;
+            /* Margem geral da página */
+            color: #333;
+            font-size: 9pt;
+            /* Fonte base menor para economizar espaço */
+        }
+
+        .header-container {
+            border: 1px solid #000;
+            /* Borda ao redor de todo o cabeçalho */
+            padding: 8px;
+            margin-bottom: 15px;
+            overflow: auto;
+            /* Para conter os floats */
+            border-radius: 8px;
+            /* Borda arredondada */
+        }
+
+        .logo-area {
+            float: left;
+            width: 30%;
+            /* Espaço para a logo */
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+
+        .logo-empresa {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .company-info-area {
+            float: left;
+            width: 70%;
+            /* Espaço para os dados da empresa */
+            text-align: right;
+            /* Alinha texto da empresa à direita */
+            font-size: 8pt;
+            /* Fonte menor para dados da empresa */
+            line-height: 1.3;
+        }
+
+        .company-info-area h1 {
+            /* CEVIBRAZ ESQUADRIAS E VIDROS */
+            font-size: 14pt;
+            color: #000;
+            margin: 0 0 5px 0;
+            border-bottom: none;
+            font-weight: bold;
+            padding-bottom: 0;
+        }
+
+        .company-info-area p {
+            margin: 0 0 2px 0;
+        }
+
+        .telefones {
+            font-size: 10pt;
+            /* Tamanho considerável para os telefones */
+            font-weight: bold;
+            margin-top: 5px !important;
+            /* Força um pouco de espaço acima */
+            text-align: left;
+            /* Alinha telefones à esquerda, abaixo da logo */
+            clear: both;
+            /* Garante que fique abaixo dos floats */
+            padding-top: 5px;
+            border-top: 1px solid #000;
+            /* Linha abaixo da logo/dados da empresa */
+            margin-top: 5px;
+            /* Espaço após a linha */
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .section-title {
+            font-size: 11pt;
+            /* Reduzido */
+            font-weight: bold;
+            color: #000000;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 2px;
+            margin-top: 10px;
+            /* Reduzido */
+            margin-bottom: 6px;
+            /* Reduzido */
+        }
+
+        .info-grid {
+            display: grid;
+            /* Ajustado para o layout da imagem: DATA | PEDIDO | CLIENTE | TEL */
+            grid-template-columns: auto 1fr auto 1fr;
+            gap: 2px 6px;
+            /* Espaçamento menor */
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+
+        .info-grid strong {
+            font-weight: bold;
+            font-size: 8pt;
+        }
+
+        .info-grid span {
+            font-size: 8pt;
+        }
+
+        .pedido-numero {
+            /* Para estilizar o número do pedido em vermelho */
+            color: red;
+            font-weight: bold;
+        }
+
+        .observacoes-box {
+            border: 1px solid #ddd;
+            border-left: 3px solid #000000;
+            padding: 6px 10px;
+            /* Reduzido */
+            background-color: #f8f8f8;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .observacoes-box h3 {
+            margin-top: 0;
+            margin-bottom: 4px;
+            font-size: 9pt;
+            /* Reduzido */
+            color: #000000;
+            border-bottom: none;
+        }
+
+        .observacoes-box p {
+            margin: 0;
+            font-size: 8pt;
+            /* Reduzido */
+        }
+
+        .quadro-item-container {
+            border: 1px solid #ccc;
+            padding: 8px;
+            /* Reduzido */
+            margin-bottom: 8px;
+            /* Reduzido */
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .quadro-item-container h4 {
+            font-size: 9pt;
+            /* Reduzido */
+            color: #333;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 2px;
+            margin-top: 0;
+            margin-bottom: 4px;
+        }
+
+        .quadro-item-details ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .quadro-item-details li {
+            margin-bottom: 2px;
+            /* Reduzido */
+            font-size: 8pt;
+            /* Reduzido */
+            line-height: 1.2;
+            /* Reduzido */
+        }
+
+        .total-section {
+            text-align: right;
+            margin-top: 15px;
+            /* Reduzido */
+            padding-top: 6px;
+            border-top: 1px solid #0056b3;
+            font-size: 10pt;
+            /* Reduzido */
+            font-weight: bold;
+        }
+
+        .company-address-wrapper {
+            /* Wrapper para o endereço, para centralizar */
+            clear: both;
+            /* Garante que fique abaixo dos floats internos da company-info-area se houver */
+            text-align: center;
+            /* Centraliza o parágrafo do endereço */
+            margin-top: 5px;
+            /* Espaço acima do endereço */
+            width: 100%;
+            /* Ocupa toda a largura da company-info-area */
+        }
+
+        .company-address-wrapper p {
+            font-size: 8.6pt;
+            margin: 0;
+            display: inline-block;
+            /* Para o text-align:center funcionar no p */
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-container">
+        <div class="logo-area">
+            <img src="CAMINHO_PARA_SUA_LOGO_AQUI" alt="Logo" class="logo-empresa" id="logoEmpresa">
+            <br><br>
+        </div>
+        <div class="company-info-area">
+            <h1>CEVIBRAZ ESQUADRIAS E VIDROS</h1>
+            <p>ESQUADRIAS DE ALUMÍNIO</p>
+            <p>TODOS OS TIPOS DE VIDRO</p>
+            <p>QUADROS E MOLDURAS</p>
+        </div>
+        <div class="company-address-wrapper">
+            <p>Av. Prisciliana de Castilho n° 422 - Centro - CEP 11660-330 - Caraguatatuba - SP</p>
+        </div>
+        <div class="telefones">
+            Telefone: <br> 12 2101-9261 <img src="CAMINHO_ICONE_WHATSAPP" alt="W"
+                style="height:10px; vertical-align:middle;"> <br> 12 99143-5644
+        </div>
+    </div>
+    <div class="clear"></div>
+
+
+    <div class="info-grid">
+        <strong>Data:</strong> <span id="dataPedido"></span>
+        <strong>Número do pedido:</strong> <span id="numeroPedido" class="pedido-numero"></span>
+        <strong>Cliente:</strong> <span id="nomeCliente"></span>
+        <strong>Telefone do cliente:</strong> <span id="telefoneCliente"></span>
+        <strong>Atendente:</strong> <span id="nomeAtendente"></span>
+        <span></span> <span></span> <span></span>
+    </div>
+
+    <div class="observacoes-box" id="observacoesContainer">
+        <h3>Observações Gerais do Pedido:</h3>
+        <p id="observacoesGerais"></p>
+    </div>
+
+    <div class="section-title">Itens do Pedido</div>
+    <div class="section" id="quadrosList">
+    </div>
+
+    <div class="total-section">
+        <p>Valor Total do Pedido: <span id="valorTotal"></span></p>
+    </div>
+</body>
+
+</html>

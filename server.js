@@ -6,9 +6,10 @@ const mysql = require('mysql2/promise');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const { generateOrderPdf } = require('./utils/pdfGenerator');
-const { generateOsPdf } = require('./utils/generateOsPdf');
+const { generateOrderPdf } = require('./utils/pdfGenerator'); // Apenas a função principal
+const { generateOsPdf } = require('./utils/generateOsPdf');   // Apenas a função principal
 const { calcularPrecoQuadro } = require('./utils/calculos');
+
 
 const app = express();
 const port = 3000;

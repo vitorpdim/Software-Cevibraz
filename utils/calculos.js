@@ -10,15 +10,19 @@ function cmParaMetro(valorCm) {
 
 // RF01 - Metro linear: (altura + altura + largura + largura)
 function calcularMetroLinear(alturaCm, larguraCm) {
-    const alturaArredondada = arredondarParaCinco(alturaCm);
-    const larguraArredondada = arredondarParaCinco(larguraCm);
+    // Note: This function itself calls arredondarParaCinco,
+    // but the inputs alturaCm and larguraCm to this function
+    // must already be the rounded values from the main quadro dimensions.
+    const alturaArredondada = arredondarParaCinco(alturaCm); // This inner call might be redundant if alturaCm is already rounded.
+    const larguraArredondada = arredondarParaCinco(larguraCm); // Same here.
     return (alturaArredondada + alturaArredondada + larguraArredondada + larguraArredondada) / 100;
 }
 
 // RF01 - Metro quadrado: (altura × largura)
 function calcularMetroQuadrado(alturaCm, larguraCm) {
-    const alturaArredondada = arredondarParaCinco(alturaCm);
-    const larguraArredondada = arredondarParaCinco(larguraCm);
+    // Note: Similar to calcularMetroLinear, inputs should ideally already be rounded.
+    const alturaArredondada = arredondarParaCinco(alturaCm); // Redundant if already rounded.
+    const larguraArredondada = arredondarParaCinco(larguraCm); // Redundant if already rounded.
     return (alturaArredondada * larguraArredondada) / 10000;
 }
 
@@ -27,6 +31,8 @@ function calcularAreaPaspatur(alturaCm, larguraCm, espessuraPaspaturCm) {
     const espessuraReal = Math.max(espessuraPaspaturCm, 2);
     const alturaComPaspaturCm = alturaCm + (2 * espessuraReal);
     const larguraComPaspaturCm = larguraCm + (2 * espessuraReal);
+    // This calls calcularMetroQuadrado, so it will re-round.
+    // It's better to pass already rounded dimensions to this function too.
     return calcularMetroQuadrado(alturaComPaspaturCm, larguraComPaspaturCm);
 }
 
@@ -40,27 +46,40 @@ async function calcularPrecoQuadro(altura_cm, largura_cm, moldurasSelecionadas, 
         return rows.length > 0 ? parseFloat(rows[0].valor_base) : 0;
     };
 
+    // PRIMEIRO PASSO: Arredondar as dimensões originais do quadro
+    const alturaArredondadaQuadro = arredondarParaCinco(altura_cm);
+    const larguraArredondadaQuadro = arredondarParaCinco(largura_cm);
+
     const temPaspatur = materiaisSelecionados.includes('Paspatur') && espessuraPaspaturCm > 0;
 
-    const alturaInterna_m = altura_cm / 100;
-    const larguraInterna_m = largura_cm / 100;
+    // Use as dimensões arredondadas para todos os cálculos subsequentes
+    const alturaInterna_m = cmParaMetro(alturaArredondadaQuadro);
+    const larguraInterna_m = cmParaMetro(larguraArredondadaQuadro);
     const perimetroInterno_m = (alturaInterna_m + larguraInterna_m) * 2;
 
-    const alturaExterna_m = temPaspatur ? alturaInterna_m + (espessuraPaspaturCm / 100) * 2 : alturaInterna_m;
-    const larguraExterna_m = temPaspatur ? larguraInterna_m + (espessuraPaspaturCm / 100) * 2 : larguraInterna_m;
-    const perimetroExterno_m = (alturaExterna_m + larguraExterna_m) * 2;
-    const areaExterna_m2 = alturaExterna_m * larguraExterna_m;
+    // Para a altura e largura externa, que podem ser afetadas pelo paspatur
+    const alturaExterna_cm_base = temPaspatur ? alturaArredondadaQuadro + (2 * Math.max(espessuraPaspaturCm, 2)) : alturaArredondadaQuadro;
+    const larguraExterna_cm_base = temPaspatur ? larguraArredondadaQuadro + (2 * Math.max(espessuraPaspaturCm, 2)) : larguraArredondadaQuadro;
+    
+    // Convertendo para metros apenas uma vez após considerar o paspatur
+    const alturaExterna_m = cmParaMetro(alturaExterna_cm_base);
+    const larguraExterna_m = cmParaMetro(larguraExterna_cm_base);
+    const perimetroExterna_m = (alturaExterna_m + larguraExterna_m) * 2;
+    const areaExterna_m2 = alturaExterna_m * larguraExterna_m; // Área final para vidro, fundo, paspatur e limpeza
 
     for (const materialNome of materiaisSelecionados) {
         const materialPrice = await getMaterialPrice(materialNome);
         if (materialPrice > 0) {
             let valorMaterial = 0;
             if (materialNome.toLowerCase().includes('vidro') || materialNome.toLowerCase().includes('fundo')) {
-                valorMaterial = areaExterna_m2 * materialPrice;
+                // Usam a área externa arredondada
+                valorMaterial = areaExterna_m2 * materialPrice; 
             } else if (materialNome.toLowerCase().includes('sarrafo')) {
-                valorMaterial = perimetroInterno_m * materialPrice;
+                // Usa o perímetro interno arredondado
+                valorMaterial = perimetroInterno_m * materialPrice; 
             } else if (materialNome.toLowerCase().includes('paspatur')) {
-                valorMaterial = areaExterna_m2 * materialPrice;
+                // O paspatur também é por m² da área externa arredondada
+                valorMaterial = areaExterna_m2 * materialPrice; 
             }
 
             if (valorMaterial > 0) {
@@ -75,7 +94,8 @@ async function calcularPrecoQuadro(altura_cm, largura_cm, moldurasSelecionadas, 
             const [rows] = await db.execute('SELECT valor_metro_linear FROM Molduras WHERE nome = ? OR codigo = ?', [molduraNome, molduraNome]);
             if (rows.length > 0) {
                 const molduraPrice = parseFloat(rows[0].valor_metro_linear);
-                const valorMoldura = perimetroExterno_m * molduraPrice;
+                // A moldura usa o perímetro externo arredondado
+                const valorMoldura = perimetroExterna_m * molduraPrice; 
                 valorTotal += valorMoldura;
                 detalhes.push(`Moldura (${molduraNome}): R$ ${valorMoldura.toFixed(2)}`);
             }
@@ -83,7 +103,8 @@ async function calcularPrecoQuadro(altura_cm, largura_cm, moldurasSelecionadas, 
     }
 
     if (limpezaSelecionada) {
-        const valorLimpeza = areaExterna_m2 * 150.00;
+        // A limpeza também é por m² da área externa arredondada
+        const valorLimpeza = areaExterna_m2 * 150.00; 
         valorTotal += valorLimpeza;
         detalhes.push(`Limpeza: R$ ${valorLimpeza.toFixed(2)}`);
     }
@@ -94,8 +115,8 @@ async function calcularPrecoQuadro(altura_cm, largura_cm, moldurasSelecionadas, 
 module.exports = {
     arredondarParaCinco,
     cmParaMetro,
-    calcularMetroLinear,
-    calcularMetroQuadrado,
-    calcularAreaPaspatur,
+    calcularMetroLinear, 
+    calcularMetroQuadrado, 
+    calcularAreaPaspatur, 
     calcularPrecoQuadro
 };

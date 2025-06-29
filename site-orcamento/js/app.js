@@ -63,9 +63,11 @@ const btnSalvarValorEditado = document.getElementById('btnSalvarValorEditado');
 
 function showCustomAlert(message) {
     if (window.electronAPI && typeof window.electronAPI.showAlert === 'function') {
-        window.electronAPI.showshowCustomAlert(message);
+        window.electronAPI.showAlert(message);
     } else {
-        showCustomAlert(message);
+        
+        console.warn('Electron API não disponível, mostrando alert genérico:', message);
+        alert(message);
     }
 }
 

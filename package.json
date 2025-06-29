@@ -1,19 +1,48 @@
 {
-  "name": "backend_orcamento",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "sistema-orcamento",
+  "version": "4.0.0",
+  "description": "Sistema de Orçamento de Quadros",
+  "main": "main.js",
+  "author": "Victor",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron .",
+    "build": "electron-builder",
+    "rebuild": "electron-rebuild"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "body-parser": "^2.2.0",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "mysql2": "^3.14.1",
-    "puppeteer": "^24.9.0"
+    "express": "^4.19.2",
+    "mysql2": "^3.10.0",
+    "puppeteer": "^24.10.1"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.6.0",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.seu-nome.sistema-orcamento",
+    "productName": "Sistema de Orcamento",
+    "files": [
+      "**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/node_modules/.bin",
+      "!**/*.{o,h,c,cc,cpp,gyp,gpyi}"
+    ],
+    "asarUnpack": [
+      "**/node_modules/puppeteer/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/puppeteer",
+        "to": "node_modules/puppeteer",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
   }
 }

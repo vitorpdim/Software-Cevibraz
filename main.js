@@ -10,7 +10,6 @@ function createWindow() {
         width: 1280,
         height: 800,
         webPreferences: {
-            // MUDANÇAS CRÍTICAS PARA SEGURANÇA E COMUNICAÇÃO
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
             contextIsolation: true,
@@ -30,18 +29,51 @@ function createWindow() {
         mainWindow.webContents.openDevTools();
     }
 
-    // CORREÇÃO PARA JANELA EM BRANCO NO DOWNLOAD
+    // --- REVISÃO DA LÓGICA DE DOWNLOAD ---
     mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
-        event.preventDefault();
-        dialog.showSaveDialog({
+        // ESSA LINHA É CRÍTICA PARA PEGAR O CONTROLE DO DOWNLOAD
+        event.preventDefault(); 
+
+        console.log(`[DOWNLOAD] Will-download acionado para: ${item.getFilename()}`);
+
+        dialog.showSaveDialog(mainWindow, { // Passe mainWindow para que o diálogo seja modal à janela principal
             title: 'Salvar PDF',
             defaultPath: item.getFilename(),
             filters: [{ name: 'Arquivos PDF', extensions: ['pdf'] }]
         }).then(({ filePath }) => {
             if (filePath) {
+                console.log(`[DOWNLOAD] Caminho de salvamento selecionado: ${filePath}`);
                 item.setSavePath(filePath);
+                item.on('updated', (updateEvent, state) => {
+                    console.log(`[DOWNLOAD] Item '${item.getFilename()}' atualizado. Estado: ${state}`);
+                    if (state === 'interrupted') {
+                        console.warn(`[DOWNLOAD] Download interrompido para ${item.getFilename()}. Motivo: ${item.getLastError()}`);
+                    }
+                });
+                
+                item.on('done', (doneEvent, state) => {
+                    if (state === 'completed') {
+                        console.log(`[DOWNLOAD] Download de '${item.getFilename()}' COMPLETO em: ${item.getSavePath()}`);
+                        dialog.showMessageBox(mainWindow, {
+                            type: 'info',
+                            title: 'Download Concluído',
+                            message: `O PDF foi salvo em:\n${item.getSavePath()}`
+                        });
+                    } else {
+                        console.error(`[DOWNLOAD] Download de '${item.getFilename()}' FALHOU. Estado: ${state}. Erro: ${item.getLastError()}`);
+                        dialog.showErrorBox('Erro no Download', `Não foi possível salvar o PDF.\nStatus: ${state}\nErro: ${item.getLastError()}`);
+                    }
+                });
+
+                // Se o item.on('done') não estiver sendo chamado, é porque o fluxo de dados não está fluindo.
+                // Este é um problema fundamental de como o Electron lida com o download de Blob/fetch.
+                // O download via Base64 é a forma mais robusta de contornar isso.
+
+            } else {
+                console.log(`[DOWNLOAD] Diálogo de salvamento cancelado pelo usuário para ${item.getFilename()}.`);
+                item.cancel(); // Cancela o item de download, importante!
             }
-        }).catch(err => console.log(err));
+        }).catch(err => console.error(`[DOWNLOAD] Erro no diálogo showSaveDialog: ${err}`));
     });
 
     mainWindow.on('closed', () => { mainWindow = null; });

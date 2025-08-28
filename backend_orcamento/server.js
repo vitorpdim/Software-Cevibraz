@@ -46,7 +46,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 const dbConfig = {
     host: 'localhost',
     user: 'root',
-    password: '', // Sua senha
+    password: '', 
     database: 'orcamento_quadros_db',
     waitForConnections: true,
     connectionLimit: 10,
@@ -442,3 +442,4 @@ app.listen(port, async () => {
     }
 
 });
+

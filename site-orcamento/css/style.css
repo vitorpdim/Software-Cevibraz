@@ -13,16 +13,12 @@ body {
     line-height: 1.6;
 }
 
-/* Otimização: A propriedade 'will-change' avisa o navegador quais propriedades 
-serão animadas, permitindo que ele otimize o processo com antecedência. */
 .btn, .form-control, .form-check-input, section, .backlog-link {
-    will-change: transform, opacity; /* Informa que transform e opacity podem mudar */
+    will-change: transform, opacity;
 }
 
-/* Navbar moderna - Otimizada */
+/* Navbar - Otimizada */
 .custom-navbar {
-    /* Otimização: Removido 'backdrop-filter', que é muito pesado para a performance. 
-       Substituído por um fundo sólido com transparência para manter a estética. */
     background: rgba(240, 248, 232, 0.85);
     border-bottom: 1px solid rgba(72, 187, 120, 0.2);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -40,7 +36,6 @@ serão animadas, permitindo que ele otimize o processo com antecedência. */
     text-decoration: none;
     padding: 8px 16px;
     border-radius: 25px;
-    /* Otimização: A transição agora foca em 'transform' e 'background-color', que são mais leves. */
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, color 0.3s;
     position: relative;
     overflow: hidden;
@@ -61,17 +56,13 @@ serão animadas, permitindo que ele otimize o processo com antecedência. */
     color: #22543d;
     background: rgba(72, 187, 120, 0.1);
     transform: translateY(-2px);
-    /* Otimização: A animação de 'box-shadow' foi removida do hover para evitar repinturas custosas. 
-       O 'transform' já fornece um feedback visual excelente e performático. */
 }
 
 .backlog-link:hover::before {
     left: 100%;
 }
 
-/* Header com título arredondado - Otimizado */
 .titulo-arredondado {
-    /* Otimização: Removido 'backdrop-filter'. */
     background: rgba(255, 255, 255, 0.9);
     border-radius: 0 0 50px 50px;
     margin: 0 auto 30px;
@@ -94,7 +85,6 @@ serão animadas, permitindo que ele otimize o processo com antecedência. */
     height: 3px;
     background: linear-gradient(90deg, #48bb78, #ecc94b, #48bb78);
     background-size: 200% 100%;
-    /* A animação de background-position é relativamente leve */
     animation: shimmer 3s ease-in-out infinite;
 }
 
@@ -114,7 +104,6 @@ header h1 {
 
 /* Seções modernas - Otimizada */
 section {
-    /* Otimização: Removido 'backdrop-filter'. O fundo com 'rgba' já dá um bom efeito. */
     background: rgba(255, 255, 255, 0.8);
     padding: 25px;
     border-radius: 20px;
@@ -124,7 +113,6 @@ section {
         0 2px 8px rgba(0, 0, 0, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.2);
     position: relative;
-    /* Otimização: Transição focada em 'transform' e 'box-shadow' (embora o ideal seja evitar animar a sombra) */
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -143,8 +131,6 @@ section::before {
 
 section:hover {
     transform: translateY(-5px);
-    /* Otimização: A animação da sombra foi mantida, mas a remoção do backdrop-filter já alivia muito.
-       Se ainda sentir lento, remova a transição do box-shadow. */
     box-shadow: 
         0 15px 40px rgba(0, 0, 0, 0.12),
         0 5px 15px rgba(0, 0, 0, 0.08);
@@ -176,32 +162,24 @@ h3::after {
     border-radius: 1px;
 }
 
-/* Inputs modernos - Otimizado */
 .form-control {
     background: rgba(255, 255, 255, 0.9);
     border: 2px solid rgba(72, 187, 120, 0.2);
     border-radius: 12px;
     padding: 12px 16px;
     font-size: 1rem;
-    /* Otimização: Transição focada nas propriedades mais leves. */
     transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
-    /* Removido backdrop-filter */
 }
 
 .form-control:focus {
     outline: none;
     border-color: #48bb78;
     background: rgba(255, 255, 255, 0.95);
-    /* Otimização: A sombra no focus é importante para acessibilidade, então mantemos,
-       mas a performance geral será melhor sem os outros gargalos. */
     box-shadow: 
         0 0 0 3px rgba(72, 187, 120, 0.1),
         0 4px 12px rgba(72, 187, 120, 0.15);
 }
 
-/* ... (restante do CSS sem mudanças significativas de performance) ... */
-
-/* Botões modernos - Otimizados */
 .btn {
     padding: 12px 24px;
     border-radius: 12px;
@@ -209,7 +187,6 @@ h3::after {
     font-size: 0.95rem;
     border: none;
     cursor: pointer;
-    /* Otimização: Transição focada em transform e background. */
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, box-shadow 0.2s;
     position: relative;
     overflow: hidden;
@@ -222,12 +199,7 @@ h3::after {
 
 .btn:hover {
     transform: translateY(-2px);
-    /* Otimização: A sombra no hover é um efeito forte. Manteremos, mas a carga já é menor. */
 }
-
-/* ... (as classes de botão .btn-primary, .btn-secondary etc. e o restante do CSS continuam aqui) ... */
-/* O código restante do seu CSS pode ser colado aqui, pois as otimizações mais impactantes já foram feitas acima. 
-   Para ser completo, incluí todo o resto do seu arquivo abaixo. */
 
 .btn::before {
     content: '';
@@ -294,10 +266,6 @@ h3::after {
     border-radius: 15px;
 }
 
-/* ... O resto do seu CSS continua aqui, pois não tem impacto crítico na performance de animação ... */
-/* A partir daqui, as classes são mais específicas e o impacto é menor, mas as otimizações principais já foram feitas. */
-
-/* Checkboxes customizados, labels, etc. (sem alterações críticas) */
 .form-check { margin-bottom: 15px; display: flex; align-items: center; gap: 12px; }
 .form-check-input { width: 20px; height: 20px; border: 2px solid #48bb78; border-radius: 6px; background: rgba(255, 255, 255, 0.9); cursor: pointer; transition: all 0.3s; position: relative; margin: 0; flex-shrink: 0; }
 .form-check-input:checked { background: linear-gradient(135deg, #48bb78, #38a169); border-color: #38a169; transform: scale(1.05); }
@@ -310,7 +278,6 @@ label { font-weight: 600; color: #2d5016; margin-bottom: 8px; display: block; fo
 .form-control:focus::placeholder { color: #cbd5e0; }
 
 
-/* Demais seções (sem alterações críticas) */
 #navegacao-quadros-container { background: rgba(72, 187, 120, 0.05); padding: 15px; border-radius: 15px; border: 1px solid rgba(72, 187, 120, 0.2); margin-bottom: 20px; }
 #contadorQuadros { font-weight: 600; color: #2d5016; font-size: 1.1rem; }
 #moldura-container { background: rgba(248, 250, 252, 0.5); padding: 20px; border-radius: 15px; border: 1px solid rgba(72, 187, 120, 0.1); margin: 15px 0; }
@@ -341,7 +308,6 @@ label { font-weight: 600; color: #2d5016; margin-bottom: 8px; display: block; fo
     #navegacao-quadros-container { flex-direction: column; gap: 10px; text-align: center; }
 }
 
-/* Animações de entrada - Já está bem otimizada usando opacity e transform! */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
@@ -355,10 +321,7 @@ section:nth-child(3) { animation-delay: 0.2s; }
 section:nth-child(4) { animation-delay: 0.3s; }
 section:nth-child(5) { animation-delay: 0.4s; }
 
-/* Otimização de performance - Removido 'hacks' antigos como backface-visibility
-   e substituído pelo will-change no início do arquivo, que é mais moderno. */
 
-/* Scrollbar customizada (sem impacto na performance) */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: rgba(72, 187, 120, 0.1); border-radius: 4px; }
 ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #48bb78, #ecc94b); border-radius: 4px; }

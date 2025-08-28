@@ -65,7 +65,7 @@ function showCustomAlert(message) {
     if (window.electronAPI && typeof window.electronAPI.showAlert === 'function') {
         window.electronAPI.showAlert(message);
     } else {
-        
+
         console.warn('Electron API não disponível, mostrando alert genérico:', message);
         alert(message);
     }
@@ -305,6 +305,22 @@ function validarMedidasQuadroAtual(mostrarAlerta = true) {
     return true;
 }
 
+function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    const blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+}
+
 // -----------------------------------------------------------------------------
 // SEÇÃO 3: LÓGICA DE AÇÕES E EVENTOS
 // -----------------------------------------------------------------------------
@@ -440,23 +456,63 @@ async function finalizarOuSalvarPedido() {
             showCustomAlert(data.message);
             window.location.href = 'backlog/index.html';
         } else {
-            let valorFinalDisplayPdf = chkEditarValorFinal.checked ? (parseFloat(inputValorFinalEditado.value) || valorCalculadoReal) : valorCalculadoReal;
+            let valorFinalDisplayPdf = chkEditarValorFinal.checked
+                ? (parseFloat(inputValorFinalEditado.value) || valorCalculadoReal)
+                : valorCalculadoReal;
+
             showCustomAlert(`Pedido ${data.numeroPedido} criado!`);
 
-            let urlPdfPedido = `${API_URL}/pedidos/${data.pedidoId}/pdf?valor_editado=${valorFinalDisplayPdf.toFixed(2)}`;
+            // Requisição para o PDF do Pedido
+            try {
+                const pdfPedidoResponse = await fetch(`${API_URL}/pedidos/${data.pedidoId}/pdf?valor_editado=${valorFinalDisplayPdf.toFixed(2)}`);
+                if (!pdfPedidoResponse.ok) {
+                    const errorData = await pdfPedidoResponse.json();
+                    throw new Error(errorData.message || 'Falha ao gerar PDF do Pedido.');
+                }
+                const pdfPedidoJson = await pdfPedidoResponse.json();
+                if (pdfPedidoJson.success && pdfPedidoJson.pdfData) {
+                    const pdfBlob = b64toBlob(pdfPedidoJson.pdfData, 'application/pdf');
+                    const pdfUrl = URL.createObjectURL(pdfBlob);
+                    const a = document.createElement('a');
+                    a.href = pdfUrl;
+                    a.download = pdfPedidoJson.filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(pdfUrl);
+                } else {
+                    throw new Error('Dados do PDF do Pedido inválidos recebidos do servidor.');
+                }
+            } catch (error) {
+                console.error('Erro ao baixar PDF do Pedido:', error);
+                showCustomAlert(`Erro ao baixar PDF do Pedido: ${error.message}`);
+            }
 
-            const pdfResponse = await fetch(urlPdfPedido);
-            if (!pdfResponse.ok) throw new Error('Falha ao gerar PDF do Pedido.');
-
-            const pdfBlob = await pdfResponse.blob();
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-            const a = document.createElement('a');
-            a.href = pdfUrl;
-            a.download = `orcamento_pedido_${data.numeroPedido}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(pdfUrl);
+            // Requisição para o PDF da OS
+            try {
+                const pdfOsResponse = await fetch(`${API_URL}/pedidos/${data.pedidoId}/os/pdf`);
+                if (!pdfOsResponse.ok) {
+                    const errorData = await pdfOsResponse.json();
+                    throw new Error(errorData.message || 'Falha ao gerar PDF da OS.');
+                }
+                const pdfOsJson = await pdfOsResponse.json();
+                if (pdfOsJson.success && pdfOsJson.pdfData) {
+                    const pdfBlob = b64toBlob(pdfOsJson.pdfData, 'application/pdf');
+                    const pdfUrl = URL.createObjectURL(pdfBlob);
+                    const a = document.createElement('a');
+                    a.href = pdfUrl;
+                    a.download = pdfOsJson.filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(pdfUrl);
+                } else {
+                    throw new Error('Dados do PDF da OS inválidos recebidos do servidor.');
+                }
+            } catch (error) {
+                console.error('Erro ao baixar PDF da OS:', error);
+                showCustomAlert(`Erro ao baixar PDF da OS: ${error.message}`);
+            }
 
             resetarFormularioCompleto(true);
         }
@@ -517,7 +573,7 @@ checkboxInicial.addEventListener('change', function () {
 btnCalcularPreco.addEventListener('click', calcularPrecoViaBackend);
 
 btnNovoQuadro.addEventListener('click', () => {
-    // Validação de segurança que você sugeriu, garantindo que o quadro atual foi calculado
+    // Validação de segurança garantindo que o quadro atual foi calculado
     const quadroAtual = quadrosDoPedido[quadroAtualIndex];
     if (temDadosQuadroPreenchidos(quadroAtual) && quadroAtual.valorCalculado === 0) {
         showCustomAlert('Atenção: Por favor, calcule o preço do quadro atual antes de criar um novo.');
@@ -539,7 +595,7 @@ btnNovoQuadro.addEventListener('click', () => {
     limparFormularioQuadro();
     atualizarContadorQuadros();
 
-    // Mostra a navegação se agora tivermos mais de um quadro
+    // Mostra a navegação se tiver mais de um quadro
     if (quadrosDoPedido.length > 1) {
         navegacaoQuadrosContainer.classList.remove('d-none');
     }
@@ -629,18 +685,18 @@ document.addEventListener('DOMContentLoaded', () => {
         resetarFormularioCompleto(true);
         navegacaoQuadrosContainer.classList.add('d-none');
     }
-   chkPaspatur.addEventListener('change', function () {
+    chkPaspatur.addEventListener('change', function () {
 
-    paspaturOpcoes.classList.toggle('d-none', !this.checked);
-    inputEspessura.classList.toggle('d-none', !this.checked);
+        paspaturOpcoes.classList.toggle('d-none', !this.checked);
+        inputEspessura.classList.toggle('d-none', !this.checked);
 
-    if (this.checked) {
-        inputEspessura.focus();
-    } else {
-        inputEspessura.value = '';
-    }
-    marcarQuadroComoNaoCalculado();
-});
+        if (this.checked) {
+            inputEspessura.focus();
+        } else {
+            inputEspessura.value = '';
+        }
+        marcarQuadroComoNaoCalculado();
+    });
 
 
     const inputsQueAfetamPreco = [

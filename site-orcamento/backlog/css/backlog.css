@@ -13,7 +13,6 @@ body {
     line-height: 1.6;
 }
 
-/* Navbar moderna */
 .custom-navbar {
     background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(236, 201, 75, 0.1) 100%);
     backdrop-filter: blur(10px);
@@ -39,7 +38,7 @@ body {
     transform: scale(1.05);
 }
 
-/* Container principal - não ocupa toda a tela */
+/* Container principal */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -173,7 +172,6 @@ table {
     margin-top: 20px;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 15px;
-    /* overflow: hidden; foi removido para permitir que o dropdown-menu apareça sobre a tabela */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -581,7 +579,6 @@ tr:last-child td:last-child {
     perspective: 1000px;
 }
 
-/* Scrollbar customizada */
 ::-webkit-scrollbar {
     width: 8px;
 }

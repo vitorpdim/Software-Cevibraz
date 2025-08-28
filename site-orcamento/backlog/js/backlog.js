@@ -1,11 +1,10 @@
 // backlog.js (COMPLETO E ATUALIZADO)
 
-let allPedidos = []; // Armazena todos os pedidos buscados do backend
+let allPedidos = []; // armazena todos os pedidos buscados do backend
 let currentOpenDropdown = null;
 let currentPedidoIdForStatusChange = null;
 let currentPedidoStatus = null;
 
-// URL base da sua API. Se estiver testando remotamente, troque 'localhost' pelo IP.
 const API_URL = 'http://localhost:3000/api';
 
 // --- Funções de Comunicação com a API ---
@@ -34,7 +33,7 @@ async function changePedidoStatus(pedidoId, newStatus) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status: newStatus })
         });
-        const responseText = await response.text(); // Lê como texto primeiro
+        const responseText = await response.text(); // vai lê como texto primeiro
         if (!response.ok) {
             try {
                 const errorResult = JSON.parse(responseText);
@@ -44,7 +43,7 @@ async function changePedidoStatus(pedidoId, newStatus) {
             }
         }
         
-        // Atualiza a lista local e re-renderiza para refletir a mudança
+        // atualiza a lista local e re-renderiza para refletir a mudança
         const pedidoToUpdate = allPedidos.find(p => p.id === pedidoId);
         if (pedidoToUpdate) {
             pedidoToUpdate.status = newStatus;
@@ -85,6 +84,33 @@ async function deletePedido(id) {
     closeDropdowns();
 }
 
+async function downloadPdfFromBackend(url, filename) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            const errorData = await response.json(); // tentar ler o erro como JSON
+            throw new Error(errorData.message || 'Falha na resposta do servidor.');
+        }
+        const pdfJson = await response.json(); // espera um JSON com os dados do PDF
+        if (pdfJson.success && pdfJson.pdfData) {
+            const pdfBlob = b64toBlob(pdfJson.pdfData, 'application/pdf');
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = pdfUrl;
+            a.download = pdfJson.filename || filename; // usa o filename do JSON ou fallback
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(pdfUrl);
+        } else {
+            throw new Error('Dados do PDF inválidos recebidos do servidor.');
+        }
+    } catch (error) {
+        console.error(`Erro ao baixar ${filename}:`, error);
+        alert(`Falha ao baixar PDF: ${error.message}`);
+    }
+}
+
 // --- Funções de Renderização e UI ---
 
 function renderPedidos(pedidos) {
@@ -96,19 +122,19 @@ function renderPedidos(pedidos) {
     tbodyJaFeito.innerHTML = '';
     tbodyEntregue.innerHTML = '';
 
-    // Ordena os pedidos por número (menor para o maior)
+    // ordena os pedidos por número (menor para o maior)
     pedidos.sort((a, b) => parseInt(a.numero_pedido) - parseInt(b.numero_pedido));
 
     pedidos.forEach(pedido => {
-        const pdfPedidoLink = pedido.pdf_filename 
-            ? `<a href="${API_URL}/pedidos/${pedido.id}/pdf" target="_blank" class="btn btn-sm btn-outline-primary">Pedido ${pedido.numero_pedido}</a>` 
-            : 'PDF Indisponível';
+        const pdfPedidoLink = pedido.pdf_filename
+        ? `<button class="btn btn-sm btn-outline-primary" onclick="downloadPdfFromBackend('${API_URL}/pedidos/${pedido.id}/pdf?valor_editado=${parseFloat(pedido.valor_final).toFixed(2)}', 'orcamento_pedido_${pedido.numero_pedido}.pdf')">Pedido ${pedido.numero_pedido}</button>`
+        : 'PDF Indisponível';
+
+    const pdfOsLink = pedido.pdf_os_filename
+        ? `<button class="btn btn-sm btn-outline-secondary" onclick="downloadPdfFromBackend('${API_URL}/pedidos/${pedido.id}/os/pdf', 'os_${pedido.numero_pedido}.pdf')">OS ${pedido.numero_pedido}</button>`
+        : 'OS Indisponível';
         
-        const pdfOsLink = pedido.pdf_os_filename 
-            ? `<a href="${API_URL}/pedidos/${pedido.id}/os/pdf" target="_blank" class="btn btn-sm btn-outline-secondary">OS ${pedido.numero_pedido}</a>`
-            : 'OS Indisponível';
-        
-        // Lógica para criar o botão de avançar status
+        // lógica pra criar o botão de avançar status
         let proximoStatus = '';
         let podeAvancar = false;
         if (pedido.status === 'A Fazer') {
@@ -155,16 +181,13 @@ function renderPedidos(pedidos) {
         }
     });
 
-    // Adiciona os event listeners para os novos botões
     addEventListenersAvançarStatus();
 }
 
 function addEventListenersAvançarStatus() {
     document.querySelectorAll('.btn-avancar-status').forEach(button => {
-        // Para evitar listeners duplicados, removemos antes de adicionar
         button.replaceWith(button.cloneNode(true));
     });
-    // Adiciona o listener aos novos botões clonados
     document.querySelectorAll('.btn-avancar-status').forEach(button => {
         button.addEventListener('click', handleAvancarStatusClick);
     });
@@ -233,7 +256,7 @@ function closeStatusModal() {
 
 function editPedido(id) {
     console.log('Redirecionando para editar pedido:', id);
-    // Redireciona para a página principal, passando o ID do pedido como parâmetro na URL
+    // redireciona pra a página principal, passando o ID do pedido como parâmetro na URL
     window.location.href = `../index.html?editPedidoId=${id}`;
 }
 
@@ -253,6 +276,22 @@ document.querySelectorAll('.tab-button').forEach(button => {
     });
 });
 
+function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    const blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    fetchPedidos(); // Busca os pedidos do backend ao carregar
+    fetchPedidos(); // busca os pedidos do backend
 });

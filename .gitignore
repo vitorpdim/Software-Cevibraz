@@ -1,0 +1,29 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Pasta de dependências do Node.js
+node_modules
+
+# Pasta de build do Electron
+dist
+release-builds
+*.exe
+*.msi
+*.dmg
+*.pkg
+
+# Pasta do Chromium
+backend_orcamento/local-chromium
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.production
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db

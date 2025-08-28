@@ -1,14 +1,14 @@
- -- =====================================================================
--- SCRIPT DE CONFIGURAÇÃO COMPLETO E UNIFICADO DO BANCO DE DADOS
+-- =====================================================================
+--      SCRIPT DE CONFIGURAÇÃO COMPLETO DO BANCO DE DADOS
 -- INSTRUÇÃO: Arraste este arquivo para a caixa de texto na aba SQL
---            do phpMyAdmin e clique em "Executar".
+--            do phpMyAdmin e clique em "Executar"
 -- =====================================================================
 
 -- 1. CRIAÇÃO E USO DO BANCO DE DADOS
 CREATE DATABASE IF NOT EXISTS orcamento_quadros_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE orcamento_quadros_db;
 
--- 2. APAGA AS TABELAS ANTIGAS PARA GARANTIR UMA INSTALAÇÃO LIMPA
+-- 2. APAGA AS TABELAS ANTIGAS PARA GARANTIR UMA INSTALAÇÃO CLEAN
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS Quadro_Materiais;
 DROP TABLE IF EXISTS Quadro_Molduras;
@@ -509,7 +509,7 @@ INSERT IGNORE INTO Molduras (codigo, nome, valor_metro_linear) VALUES
  ('245R-395', '245R-395', 57.60),
  ('290R-370', '290R-370', 90.00),
  ('290R-375', '290R-375', 90.00),
- ('290R-390', '290R-390', 90.00), -- Assumindo preço para 290R-390
+ ('290R-390', '290R-390', 90.00),
  ('345R- 116', '345R- 116', 90.00),
  ('345R-166', '345R-166', 90.00),
  ('345R-300', '345R-300', 90.00),
@@ -620,7 +620,6 @@ INSERT IGNORE INTO Molduras (codigo, nome, valor_metro_linear) VALUES
  ('401R-390', '401R-390', 81.60),
  ('401R-385', '401R-385', 81.60),
  ('401R-315', '401R-315', 81.60),
--- A linha '401R-300' está duplicada, mantive a primeira ocorrência.
  ('401R-395', '401R-395', 81.60),
  ('401R-375', '401R-375', 81.60),
  ('401R-370', '401R-370', 81.60),
@@ -660,8 +659,8 @@ INSERT IGNORE INTO Molduras (codigo, nome, valor_metro_linear) VALUES
  ('914-3059', '914-3059', 84.00),
  ('972-1167', '972-1167', 93.60),
  ('972-3175', '972-3175', 93.60),
- ('372-3010', '372-3010', 93.60), -- Código parece diferente do padrão '972'
- ('372-3059', '372-3059', 93.60), -- Código parece diferente do padrão '972'
+ ('372-3010', '372-3010', 93.60),
+ ('372-3059', '372-3059', 93.60),
  ('976-166', '976-166', 54.00),
  ('976-116', '976-116', 54.00),
  ('976-1010', '976-1010', 54.00),

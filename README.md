@@ -43,7 +43,7 @@ Siga os passos abaixo para configurar e rodar o projeto em ambiente de desenvolv
     cd Software-Cevibraz
     ```
 
-2.  **Instale as dependências:**
+2.  **Instale as dependências (isso também fará o download automático do Chromium usado pelo Puppeteer)::**
     ```bash
     npm install
     ```
@@ -59,6 +59,10 @@ Siga os passos abaixo para configurar e rodar o projeto em ambiente de desenvolv
     ```bash
     npm start
     ```
+
+🔎 Observação:
+O diretório node_modules e o local-chromium não estão no repositório pois são muito grandes.
+Eles são instalados automaticamente pelo comando npm install.
 
 ---
 

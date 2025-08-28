@@ -1,6 +1,6 @@
 # Software-Cevibraz - Sistema de Orçamento de Quadros
 
-![Captura de Tela do Software](<img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/d041adb1-1172-4db1-a416-10c660e356cf" />) Um sistema de desktop completo construído com Electron e Node.js para gerenciar e criar orçamentos detalhados para a fabricação de quadros feita para a empresa de um colega
+![Captura de Tela do Software](https://github.com/user-attachments/assets/d041adb1-1172-4db1-a416-10c660e356cf) Um sistema de desktop completo construído com Electron e Node.js para gerenciar e criar orçamentos detalhados para a fabricação de quadros feita para a empresa de um colega
 
 ---
 

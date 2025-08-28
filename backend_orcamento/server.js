@@ -228,7 +228,7 @@ app.get('/api/pedidos/:id', async (req, res) => {
                 materiaisNomes,
                 espessuraPaspatur,
                 !!quadro.limpeza_flag,
-                conn // Usa a conexão da transação
+                conn
             );
 
             return {
@@ -239,7 +239,7 @@ app.get('/api/pedidos/:id', async (req, res) => {
                 moldurasSelecionadas: moldurasNomes,
                 materiaisSelecionados: materiaisNomes,
                 espessuraPaspatur: espessuraPaspatur,
-                valorCalculado: resultadoCalculo.total // AQUI ESTÁ A MÁGICA!
+                valorCalculado: resultadoCalculo.total
             };
         }));
 
@@ -248,7 +248,7 @@ app.get('/api/pedidos/:id', async (req, res) => {
             clienteNome: pedido.cliente_nome,
             clienteTelefone: pedido.cliente_telefone,
             observacoes: pedido.observacoes,
-            quadros: quadrosCompletos // Agora os quadros vêm com seus valores calculados
+            quadros: quadrosCompletos
         };
 
         res.json(respostaCompleta);
@@ -440,4 +440,5 @@ app.listen(port, async () => {
         logger.error('[STARTUP_ERROR] Erro fatal ao iniciar o servidor:', error);
         throw error;
     }
+
 });

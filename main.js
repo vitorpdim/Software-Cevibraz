@@ -1,9 +1,30 @@
-// main.js (VERSÃO FINAL E COMPLETA)
-const { app, BrowserWindow, dialog, ipcMain, session } = require('electron');
+// main.js 
+const { app, BrowserWindow, dialog, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
 
 let mainWindow;
+
+// --- INÍCIO DA NOVA LÓGICA PARA PUPPETEER ---
+
+const puppeteerPath = (() => {
+    const resourcesPath = process.resourcesPath;
+    const unpackedPath = path.join(resourcesPath, 'app.asar.unpacked', 'node_modules', 'puppeteer');
+    const potentialPath = path.join(unpackedPath, '.cache');
+    
+    if (fs.existsSync(potentialPath)) {
+        return potentialPath;
+    }
+    return unpackedPath;
+})();
+
+// caminho do cache do Puppeteer pra estar dentro da nossa aplicação
+process.env.PUPPETEER_CACHE_DIR = puppeteerPath;
+
+// pasta de logs
+const logPath = app.getPath('userData');
+process.env.APP_LOG_PATH = path.join(logPath, 'logs');
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -28,70 +49,24 @@ function createWindow() {
     if (!app.isPackaged) {
         mainWindow.webContents.openDevTools();
     }
-
-    // --- REVISÃO DA LÓGICA DE DOWNLOAD ---
-    mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
-        // ESSA LINHA É CRÍTICA PARA PEGAR O CONTROLE DO DOWNLOAD
-        event.preventDefault(); 
-
-        console.log(`[DOWNLOAD] Will-download acionado para: ${item.getFilename()}`);
-
-        dialog.showSaveDialog(mainWindow, { // Passe mainWindow para que o diálogo seja modal à janela principal
-            title: 'Salvar PDF',
-            defaultPath: item.getFilename(),
-            filters: [{ name: 'Arquivos PDF', extensions: ['pdf'] }]
-        }).then(({ filePath }) => {
-            if (filePath) {
-                console.log(`[DOWNLOAD] Caminho de salvamento selecionado: ${filePath}`);
-                item.setSavePath(filePath);
-                item.on('updated', (updateEvent, state) => {
-                    console.log(`[DOWNLOAD] Item '${item.getFilename()}' atualizado. Estado: ${state}`);
-                    if (state === 'interrupted') {
-                        console.warn(`[DOWNLOAD] Download interrompido para ${item.getFilename()}. Motivo: ${item.getLastError()}`);
-                    }
-                });
-                
-                item.on('done', (doneEvent, state) => {
-                    if (state === 'completed') {
-                        console.log(`[DOWNLOAD] Download de '${item.getFilename()}' COMPLETO em: ${item.getSavePath()}`);
-                        dialog.showMessageBox(mainWindow, {
-                            type: 'info',
-                            title: 'Download Concluído',
-                            message: `O PDF foi salvo em:\n${item.getSavePath()}`
-                        });
-                    } else {
-                        console.error(`[DOWNLOAD] Download de '${item.getFilename()}' FALHOU. Estado: ${state}. Erro: ${item.getLastError()}`);
-                        dialog.showErrorBox('Erro no Download', `Não foi possível salvar o PDF.\nStatus: ${state}\nErro: ${item.getLastError()}`);
-                    }
-                });
-
-                // Se o item.on('done') não estiver sendo chamado, é porque o fluxo de dados não está fluindo.
-                // Este é um problema fundamental de como o Electron lida com o download de Blob/fetch.
-                // O download via Base64 é a forma mais robusta de contornar isso.
-
-            } else {
-                console.log(`[DOWNLOAD] Diálogo de salvamento cancelado pelo usuário para ${item.getFilename()}.`);
-                item.cancel(); // Cancela o item de download, importante!
-            }
-        }).catch(err => console.error(`[DOWNLOAD] Erro no diálogo showSaveDialog: ${err}`));
-    });
-
+    
     mainWindow.on('closed', () => { mainWindow = null; });
 }
 
-try {
-    require('./backend_orcamento/server.js');
-} catch (error) {
-    console.error('Erro fatal no backend ao iniciar:', error);
-    app.on('ready', () => {
+app.on('ready', () => {
+    try {
+        console.log(`[main.js] Pasta de logs definida em: ${process.env.APP_LOG_PATH}`);
+        console.log(`[main.js] Caminho de cache do Puppeteer definido para: ${process.env.PUPPETEER_CACHE_DIR}`);
+        require('./backend_orcamento/server.js');
+    } catch (error) {
+        console.error('Erro fatal no backend ao iniciar:', error);
         dialog.showErrorBox('Erro Fatal no Backend', `Não foi possível iniciar o servidor interno.\n\nDetalhes: ${error.message}`);
         app.quit();
-    });
-}
+    }
+    
+    createWindow();
+});
 
-app.on('ready', createWindow);
-
-// CORREÇÃO PARA OS ALERTAS (ReferenceError)
 ipcMain.on('show-alert', (event, message) => {
     if (mainWindow) {
         dialog.showMessageBox(mainWindow, {

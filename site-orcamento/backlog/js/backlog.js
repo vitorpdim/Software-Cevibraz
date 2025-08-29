@@ -7,7 +7,7 @@ let currentPedidoStatus = null;
 
 const API_URL = 'http://localhost:3000/api';
 
-// --- Funções de Comunicação com a API ---
+// --- funcs de Comunicação com a API ---
 
 async function fetchPedidos() {
     try {
@@ -33,7 +33,7 @@ async function changePedidoStatus(pedidoId, newStatus) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status: newStatus })
         });
-        const responseText = await response.text(); // vai lê como texto primeiro
+        const responseText = await response.text();
         if (!response.ok) {
             try {
                 const errorResult = JSON.parse(responseText);
@@ -256,7 +256,6 @@ function closeStatusModal() {
 
 function editPedido(id) {
     console.log('Redirecionando para editar pedido:', id);
-    // redireciona pra a página principal, passando o ID do pedido como parâmetro na URL
     window.location.href = `../index.html?editPedidoId=${id}`;
 }
 
@@ -293,5 +292,6 @@ function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetchPedidos(); // busca os pedidos do backend
+    fetchPedidos(); // buscando os pedidos do back
+
 });

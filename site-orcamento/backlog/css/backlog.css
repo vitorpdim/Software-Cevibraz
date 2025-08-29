@@ -164,7 +164,6 @@ h1::after {
     }
 }
 
-/* Tabelas modernas */
 table {
     width: 100%;
     border-collapse: separate;
@@ -218,7 +217,7 @@ tr:last-child td:last-child {
     border-radius: 0 0 15px 0;
 }
 
-/* Botões da tabela */
+/* Btns da tabela */
 .btn-sm {
     padding: 6px 12px;
     font-size: 0.85rem;
@@ -311,7 +310,7 @@ tr:last-child td:last-child {
     transform: scale(1.1);
 }
 
-/* Menu dropdown */
+/* Menu de dropdown */
 .dropdown-menu {
     position: absolute;
     right: 0;
@@ -649,4 +648,5 @@ tr:last-child td:last-child {
     background: rgba(245, 101, 101, 0.1);
     color: #742a2a;
     border-left: 4px solid #f56565;
+
 }

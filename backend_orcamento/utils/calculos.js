@@ -54,23 +54,21 @@ async function calcularPrecoQuadro(altura_cm, largura_cm, moldurasSelecionadas, 
     const alturaExterna_cm_base = temPaspatur ? alturaArredondadaQuadro + (2 * Math.max(espessuraPaspaturCm, 2)) : alturaArredondadaQuadro;
     const larguraExterna_cm_base = temPaspatur ? larguraArredondadaQuadro + (2 * Math.max(espessuraPaspaturCm, 2)) : larguraArredondadaQuadro;
     
-    // Convertendo pra metros só uma vez após considerar o paspatur
+    // Convertendo pra metros só uma vez dps de considerar o paspatur
     const alturaExterna_m = cmParaMetro(alturaExterna_cm_base);
     const larguraExterna_m = cmParaMetro(larguraExterna_cm_base);
     const perimetroExterna_m = (alturaExterna_m + larguraExterna_m) * 2;
-    const areaExterna_m2 = alturaExterna_m * larguraExterna_m; // Área final para vidro, fundo, paspatur e limpeza
+    const areaExterna_m2 = alturaExterna_m * larguraExterna_m; // area final p vidro, fundo, paspatur e limpeza
 
     for (const materialNome of materiaisSelecionados) {
         const materialPrice = await getMaterialPrice(materialNome);
         if (materialPrice > 0) {
             let valorMaterial = 0;
             if (materialNome.toLowerCase().includes('vidro') || materialNome.toLowerCase().includes('fundo')) {
-                // Usam a área externa arredondada
                 valorMaterial = areaExterna_m2 * materialPrice; 
             } else if (materialNome.toLowerCase().includes('sarrafo')) {
                 valorMaterial = perimetroInterno_m * materialPrice; 
             } else if (materialNome.toLowerCase().includes('paspatur')) {
-                // O paspatur também é por m² da área externa arredondada
                 valorMaterial = areaExterna_m2 * materialPrice; 
             }
 
@@ -86,7 +84,6 @@ async function calcularPrecoQuadro(altura_cm, largura_cm, moldurasSelecionadas, 
             const [rows] = await db.execute('SELECT valor_metro_linear FROM Molduras WHERE nome = ? OR codigo = ?', [molduraNome, molduraNome]);
             if (rows.length > 0) {
                 const molduraPrice = parseFloat(rows[0].valor_metro_linear);
-                // A moldura usa o perímetro externo arredondado
                 const valorMoldura = perimetroExterna_m * molduraPrice; 
                 valorTotal += valorMoldura;
                 detalhes.push(`Moldura (${molduraNome}): R$ ${valorMoldura.toFixed(2)}`);
@@ -95,7 +92,6 @@ async function calcularPrecoQuadro(altura_cm, largura_cm, moldurasSelecionadas, 
     }
 
     if (limpezaSelecionada) {
-        // A limpeza também é por m² da área externa arredondada
         const valorLimpeza = areaExterna_m2 * 150.00; 
         valorTotal += valorLimpeza;
         detalhes.push(`Limpeza: R$ ${valorLimpeza.toFixed(2)}`);
@@ -111,4 +107,5 @@ module.exports = {
     calcularMetroQuadrado, 
     calcularAreaPaspatur, 
     calcularPrecoQuadro
+
 };

@@ -24,7 +24,7 @@
 
 ---
 
-## 📋 Pré-requisitos
+##  Pré-requisitos
 
 Antes de começar, você precisará ter as seguintes ferramentas instaladas em sua máquina:
 * [Git](https://git-scm.com)
@@ -33,7 +33,7 @@ Antes de começar, você precisará ter as seguintes ferramentas instaladas em s
 
 ---
 
-## ⚙️ Instalação e Execução
+##  Instalação e Execução
 
 Siga os passos abaixo para configurar e rodar o projeto em ambiente de desenvolvimento.
 
@@ -76,7 +76,3 @@ npm run build
 O executável e o instalador serão gerados na pasta `dist/`.
 
 ---
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
